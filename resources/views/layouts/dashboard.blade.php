@@ -12,6 +12,14 @@
     <link rel="stylesheet" href="{{ asset('mazer/dist/assets/compiled/css/app.css')}}">
     <link rel="stylesheet" href="{{ asset('mazer/dist/assets/compiled/css/app-dark.css')}}">
     <link rel="stylesheet" href="{{ asset('mazer/dist/assets/compiled/css/iconly.css')}}">
+    <link rel="stylesheet" href="{{ asset('mazer/dist/assets/extensions/simple-datatables/style.css')}}">
+    <link rel="stylesheet" href="{{ asset('mazer/dist/assets/extensions/table-datatables.css')}}">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <!-- Dripicons -->
+    <link rel="stylesheet" href="{{ asset('mazer/dist/assets/extensions/@icon/dripicons/dripicons.css')}}">
+    <link rel="stylesheet" href="{{ asset('mazer/dist/assets/compiled/css/ui-icons-dripicons.css')}}">
 </head>
 
 <body>
@@ -64,56 +72,93 @@
                     <ul class="menu">
                         <li class="sidebar-title">Menu</li>
 
-                        <li class="sidebar-item active ">
-                            <a href="index.html" class='sidebar-link'>
+                        @if (session('role') === 'HR')
+                        <li class="sidebar-item {{ request()->is('dashboard') ? 'active' : '' }} ">
+                            <a href="{{ url('/dashboard') }}" class='sidebar-link'>
                                 <i class="bi bi-grid-fill"></i>
                                 <span>Dashboard</span>
                             </a>
                         </li>
-                        <li class="sidebar-item ">
-                            <a href="index.html" class='sidebar-link'>
+                        <li class="sidebar-item {{ request()->is('tasks') ? 'active' : '' }}">
+                            <a href="{{ url('/tasks') }}" class='sidebar-link'>
                                 <i class="bi bi-check-circle-fill"></i>
                                 <span>Tasks</span>
                             </a>
                         </li>
-                        <li class="sidebar-item ">
-                            <a href="index.html" class='sidebar-link'>
+                        <li class="sidebar-item {{ request()->is('employees') ? 'active' : '' }}">
+                            <a href="{{ url('/employees') }}" class='sidebar-link'>
                                 <i class="bi bi-people-fill"></i>
                                 <span>Employees</span>
                             </a>
                         </li>
-                        <li class="sidebar-item ">
-                            <a href="index.html" class='sidebar-link'>
+                        <li class="sidebar-item {{ request()->is('departments') ? 'active' : '' }}">
+                            <a href="{{ url('/departments') }}" class='sidebar-link'>
                                 <i class="bi bi-briefcase"></i>
                                 <span>Departments</span>
                             </a>
                         </li>
-                        <li class="sidebar-item ">
-                            <a href="index.html" class='sidebar-link'>
+                        <li class="sidebar-item {{ request()->is('roles') ? 'active' : '' }}">
+                            <a href="{{ url('/roles') }}" class='sidebar-link'>
                                 <i class="bi bi-tag"></i>
                                 <span>Roles</span>
                             </a>
                         </li>
-                        <li class="sidebar-item ">
-                            <a href="index.html" class='sidebar-link'>
+                        <li class="sidebar-item {{ request()->is('presences') ? 'active' : '' }}">
+                            <a href="{{ url('/presences') }}" class='sidebar-link'>
                                 <i class="bi bi-table"></i>
                                 <span>Presences</span>
                             </a>
                         </li>
-                        <li class="sidebar-item ">
-                            <a href="index.html" class='sidebar-link'>
+                        <li class="sidebar-item {{ request()->is('payrolls') ? 'active' : '' }}">
+                            <a href="{{ url('/payrolls') }}" class='sidebar-link'>
                                 <i class="bi bi-currency-dollar"></i>
                                 <span>Payrolls</span>
                             </a>
                         </li>
-                        <li class="sidebar-item ">
-                            <a href="index.html" class='sidebar-link'>
+                        <li class="sidebar-item {{ request()->is('leave-requests') ? 'active' : '' }}">
+                            <a href="{{ url('/leave-requests') }}" class='sidebar-link'>
                                 <i class="bi bi-shift-fill"></i>
                                 <span>Leave Requests</span>
                             </a>
                         </li>
+
+                        @endif
+
+                        @if (in_array(session('role'), ['Developer', 'Sales', 'Data Entry']))
+                        <li class="sidebar-item {{ request()->is('dashboard') ? 'active' : '' }} ">
+                            <a href="{{ url('/dashboard') }}" class='sidebar-link'>
+                                <i class="bi bi-grid-fill"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item {{ request()->is('tasks') ? 'active' : '' }}">
+                            <a href="{{ url('/tasks') }}" class='sidebar-link'>
+                                <i class="bi bi-check-circle-fill"></i>
+                                <span>Tasks</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item {{ request()->is('presences') ? 'active' : '' }}">
+                            <a href="{{ url('/presences') }}" class='sidebar-link'>
+                                <i class="bi bi-table"></i>
+                                <span>Presences</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item {{ request()->is('payrolls') ? 'active' : '' }}">
+                            <a href="{{ url('/payrolls') }}" class='sidebar-link'>
+                                <i class="bi bi-currency-dollar"></i>
+                                <span>Payrolls</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item {{ request()->is('leave-requests') ? 'active' : '' }}">
+                            <a href="{{ url('/leave-requests') }}" class='sidebar-link'>
+                                <i class="bi bi-shift-fill"></i>
+                                <span>Leave Requests</span>
+                            </a>
+                        </li>
+                        @endif
+
                         <li class="sidebar-item ">
-                            <a href="index.html" class='sidebar-link'>
+                            <a href="{{ url('/logout') }}" class='sidebar-link'>
                                 <i class="bi bi-box-arrow-right"></i>
                                 <span>Logout</span>
                             </a>
@@ -122,7 +167,7 @@
                 </div>
             </div>
         </div>
-        <div id="main">
+        <div id="main" class="bg-danger bg-opacity-10">
             @yield('content')
 
             <footer>
@@ -141,9 +186,91 @@
     <script src="{{ asset('mazer/dist/assets/static/js/components/dark.js') }}"></script>
     <script src="{{ asset('mazer/dist/assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ asset('mazer/dist/assets/compiled/js/app.js') }}"></script>
+
     <!-- Need: Apexcharts -->
     <script src="{{ asset('mazer/dist/assets/extensions/apexcharts/apexcharts.min.js') }}"></script>
     <script src="{{ asset('mazer/dist/assets/static/js/pages/dashboard.js') }}"></script>
 
+    <!-- Need: ChartJS -->
+    <script src="{{ asset('mazer/dist/assets/extensions/chart.js/chart.umd.js') }}"></script>
+
+    <!-- Dibutuhkan untuk handle datatable -->
+    <script src="{{ asset('mazer/dist/assets/extensions/simple-datatables/umd/simple-datatables.js') }}"></script>
+    <script src="{{ asset('mazer/dist/assets/static/js/pages/simple-datatables.js') }}"></script>
+
+    <!-- Dibutuhkan untuk date -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    let date = flatpickr('.date', {
+        dateFormat: "Y-m-d",
+    });
+
+    let datetime = flatpickr('.datetime', {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i:s",
+    });
+
+    var chartElement = document.getElementById('presence');
+    if (chartElement) {
+        var ctxbar = chartElement.getContext('2d');
+        var myBar = new Chart(ctxbar, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    label: 'Total Presence',
+                    data: [],
+                    backgroundColor: 'rgba(227, 63, 63, 0.8)',
+                    borderColor: 'rgba(227, 63, 63, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Monthly Presence Data'
+                    },
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+
+        function updateData() {
+            fetch('/dashboard/presence')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then((output) => {
+                    myBar.data.datasets[0].data = output;
+                    myBar.update();
+                })
+                .catch(error => {
+                    myBar.data.datasets[0].data = [10, 15, 12, 8, 14, 18, 20, 16, 13, 11, 9, 7];
+                    myBar.update();
+                });
+        }
+
+        updateData();
+    }
+});
+</script>
 </body>
+
 </html>

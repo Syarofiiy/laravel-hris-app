@@ -12,14 +12,14 @@
     <div class="page-title">
         <div class="row">
             <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>Tasks</h3>
-                <p class="text-subtitle text-muted">Handle employee tasks</p>
+                <h3>Payrolls</h3>
+                <p class="text-subtitle text-muted">Manage payrolls data</p>
             </div>
             <div class="col-12 col-md-6 order-md-2 order-first">
                 <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/" class="text-danger">Dashboard</a></li>
-                        <li class="breadcrumb-item" aria-current="page">Task</li>
+                        <li class="breadcrumb-item" aria-current="page">Payroll</li>
                         <li class="breadcrumb-item active" aria-current="page">Index</li>
                     </ol>
                 </nav>
@@ -36,7 +36,7 @@
             <div class="card-body">
                 <div class="d-flex">
                     @if (session('role') == 'HR')
-                    <a href="{{ route('tasks.create') }}" class="btn btn-primary mb-3 ms-auto">New Task</a>
+                    <a href="{{ route('payrolls.create') }}" class="btn btn-primary mb-3 ms-auto">New Payroll</a>
                     @endif
                 </div>
 
@@ -47,52 +47,39 @@
                 <table class="table table-striped" id="table1">
                     <thead>
                         <tr>
-                            <th>Title</th>
-                            <th>Assigned To</th>
-                            <th>Due Date</th>
-                            <th>Status</th>
+                            <th>Employee</th>
+                            <th>Salary</th>
+                            <th>Deductions</th>
+                            <th>Bonuses</th>
+                            <th>Net Salary</th>
+                            <th>Pay Date</th>
                             <th>Option</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($tasks as $task)
+                        @foreach ($payrolls as $payroll)
 
                         <tr>
-                            <td>{{ $task->title }}</td>
-                            <td>{{ $task->employee->fullname }}</td>
-                            <td>{{ $task->due_date }}</td>
+                            <td>{{ $payroll->employee->fullname }}</td>
+                            <td>{{ number_format(num: $payroll->salary) }}</td>
+                            <td>{{ number_format($payroll->deductions) }}</td>
+                            <td>{{ number_format($payroll->bonuses) }}</td>
+                            <td>{{ number_format($payroll->net_salary) }}</td>
+                            <td>{{ $payroll->pay_date }}</td>
                             <td>
-                                @if ($task->status == 'pending')
-                                <span class="text-warning">Pending</span>
-                                @elseif ($task->status == 'done')
-                                <span class="text-success">Done</span>
-                                @else
-                                <span class="text-info">{{ $task->status }}</span>
-                                @endif
-                            </td>
-                            <td>
-                                <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-info btn-sm">View</a>
-                                @if ($task->status == 'pending')
-                                <a href="{{ route('tasks.done', $task->id) }}" class="btn btn-success btn-sm">Mark as
-                                    Done</a>
-                                @else
-                                <a href="{{ route('tasks.pending', $task->id) }}" class="btn btn-warning btn-sm">Mark
-                                    as
-                                    Pending</a>
-                                @endif
-
+                                <a href="{{ route('payrolls.show', $payroll->id) }}" class="btn btn-info btn-sm">Salary
+                                    Slip</a>
                                 @if (session('role') == 'HR')
-
-                                <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                <form action="{{ route('tasks.destroy', $task->id) }}" method="POST"
+                                <a href="{{ route('payrolls.edit', $payroll->id) }}"
+                                    class="btn btn-warning btn-sm">Edit</a>
+                                <form action="{{ route('payrolls.destroy', $payroll->id) }}" method="POST"
                                     style="display: inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm"
-                                        onclick="return confirm('Are you sure you want to delete this task?')">Delete</button>
+                                        onclick="return confirm('Are you sure you want to delete this payroll?')">Delete</button>
+                                    @endif
                                 </form>
-
-                                @endif
                             </td>
                         </tr>
 

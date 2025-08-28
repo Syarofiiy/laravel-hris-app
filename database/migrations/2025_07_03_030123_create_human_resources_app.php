@@ -27,6 +27,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+        
         Schema::create('employees', function (Blueprint $table): void {
             $table->id();
             $table ->string('fullname');
